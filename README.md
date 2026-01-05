@@ -1,54 +1,78 @@
-# Agente Inteligente de Analise e Explição de Incidentes
+# Agente Inteligente de Analise e Explicação de Incidentes
 
-Este projeto consiste em um assistente inteligente desenvolvido em Python para interpretar logs e mensagens de erro de sistemas. O foco não é o bloqueio de processos, mas sim a tradução técnica de incidentes para ajudar desenvolvedores a resolverem problemas mais rápido.
+Este projeto consiste em um assistente inteligente desenvolvido em Python para interpretar logs e mensagens de erro de sistemas. O foco e oferecer uma traducao tecnica de incidentes para ajudar desenvolvedores a entenderem falhas rapidamente atraves de IA.
 
-A ideia principal é oferecer uma camada de inteligência que resume falhas complexas, identifica a gravidade do problema e sugere caminhos para a correção, simulando a análise inicial feita por um engenheiro de suporte ou DevOps.
+A ideia principal e automatizar a leitura de arquivos de log, identificando a criticidade do erro e utilizando um modelo de linguagem para resumir o problema e sugerir acoes corretivas.
 
 ---
 
 ## Estrutura do Projeto
 
-Organização das pastas e arquivos:
+Organizacao dos arquivos no repositorio:
 
-- logs/
-  - erro_servidor.log
-  - falha_banco_dados.log
-  - conexao_api.log
-- agente_analise.py -> código principal com a lógica da IA
-- config.py -> configurações de conexão e regras básicas
+incident-agent/
+├── logs/
 
----
+│   └── erro.log
 
-## Funcionalidades do Agente
+├── .env
 
-O agente realiza quatro tarefas essenciais:
+├── incident_agent.py
 
-1. Analise de Gravidade
-   Identifica se o erro é apenas um aviso (warning) ou algo que derrubou o sistema.
+├── llm_client.py
 
-2. Resumo de Incidentes
-   Transforma logs extensos e confusos em uma explicação simples do que realmente aconteceu.
+└── requirements.txt
 
-3. Diagnóstico de Causas
-   Aponta o provável motivo do erro, como falta de memória, erro de sintaxe ou queda de conexão.
-
-4. Sugestão de Correção
-   Indica quais comandos ou ajustes devem ser feitos para solucionar o incidente.
 
 ---
 
-## Como Usar o Analisador
+## Criterios de Analise
 
-Para rodar o agente e analisar um arquivo de log, utilize os comandos abaixo:
+O agente realiza tres etapas de validacao:
 
-1. Analisar um erro de servidor:
-   python agente_analise.py logs/erro_servidor.log
+1. Deteccao de Severidade
+   Faz uma varredura automatica no log em busca de palavras-chave para classificar o erro como:
+   - Critica (Fatal, Panic, Exception)
+   - Alta (Error, Failed)
+   - Media (Warning)
+   - Baixa (Outros casos)
 
-2. Analisar uma falha de banco de dados:
-   python agente_analise.py logs/falha_banco_dados.log
+2. Resumo com Inteligencia Artificial
+   O conteudo do log e enviado para o modelo da Cohere, que gera uma explicacao clara do erro em portugues.
+
+3. Plano de Acao
+   O agente retorna recomendacoes tecnicas sobre o que deve ser verificado para resolver o incidente.
 
 ---
 
-## Diferencial do Projeto
+## Como Executar
 
-Ao contrário de scripts comuns que buscam apenas palavras-chave, este projeto utiliza IA para entender o contexto do erro. Isso reduz o tempo de diagnóstico e evita que a equipe perca tempo tentando decifrar mensagens de erro genéricas.
+1. Configure sua chave da API no arquivo .env:
+   COHERE_API_KEY=seu_token_aqui
+
+2. Instale as dependencias necessarias:
+   pip install -r requirements.txt
+
+3. Execute o agente passando o caminho do arquivo de log:
+   python incident_agent.py logs/erro.log
+
+---
+
+## Formato da Resposta
+
+O sistema retorna um JSON estruturado:
+
+- severity: Nivel de urgencia do erro.
+- summary: Resumo detalhado gerado pela IA.
+- possible_cause: Origem provavel do problema.
+- recommended_action: Passo a passo para correcao.
+
+---
+
+## Atualizacao do Projeto no GitHub
+
+Para salvar novas alteracoes via CMD, utilize os comandos:
+
+git add README.md
+git commit -m "Adicionando estrutura de pastas no README"
+git push origin main
