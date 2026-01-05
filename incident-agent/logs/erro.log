@@ -1,0 +1,3 @@
+ERROR Database connection failed
+FAILED to authenticate user
+Exception: timeout while connecting to database
